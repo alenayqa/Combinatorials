@@ -1,9 +1,29 @@
-#include "Vertex.h"
-#include "Trie.h"
+#pragma once
 #include <string>
-#include <iostream>
 
 using namespace std;
+
+template<typename T>
+struct Vertex
+{
+    // Value which has to be saved
+    T data;
+
+    // Marker to show if the vertex contains data
+    bool hasAData = false;
+
+    // List of vertices coming from this vertex
+    Vertex<T>* childs[256];
+
+    Vertex<T>* operator[] (int index);
+
+    void add(string _key, T _data);
+
+    void print(string _key);
+
+    ~Vertex();
+};
+
 
 template<typename T>
 Vertex<T>* Vertex<T>::operator[] (int index)
@@ -46,9 +66,10 @@ void Vertex<T>::add(string _key, T _data)
 template<typename T>
 void Vertex<T>::print(string _key)
 {
+
     if (hasAData)
         cout<<_key<<" : "<<data<<endl;
-
+        
     for (int i = 0; i<256; i++)
         if (childs[i])
             childs[i]->print(_key+(char)i);
