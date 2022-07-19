@@ -19,17 +19,12 @@ struct Vertex
 
     void add(string _key, T _data);
 
+    T* find(string _key);
+
     void print(string _key);
 
     ~Vertex();
 };
-
-
-template<typename T>
-Vertex<T>* Vertex<T>::operator[] (int index)
-{
-    return childs[index];
-}
 
 
 template<typename T>
@@ -73,4 +68,16 @@ void Vertex<T>::print(string _key)
     for (int i = 0; i<256; i++)
         if (childs[i])
             childs[i]->print(_key+(char)i);
+}
+
+template<typename T>
+T* Vertex<T>::find(string _key)
+{
+    if (_key.size()==0)
+        return &data;
+
+    char start = _key[0];
+    if (!childs[start])
+        return nullptr;
+    return childs[start]->find(_key.substr(1));
 }

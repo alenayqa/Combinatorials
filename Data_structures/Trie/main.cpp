@@ -14,5 +14,11 @@ int main()
     t.add("", 0);
     t.add("hello!!!", 11);
     t.print();
+    cout<<"SEARCH hello:\n";
+    int* res = t["hello!!!"];
+    if (res)
+        cout<<*res<<endl;
+    else
+        cout<<"no data\n";
 
 }

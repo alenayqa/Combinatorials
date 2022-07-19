@@ -22,24 +22,10 @@ public:
     void remove(string _key);
 
     // find value using a key
-    T& operator[] (string _key);
+    T* operator[] (string _key);
 
     void print();
 };
-
-template<typename T>
-class A
-{
-    public:
-    T s=5;
-    void print();
-};
-
-// template<typename T>
-// void A<T>::print()
-// {
-//     cout<<5.2<<endl;
-// }
 
 template<typename T>
 Trie<T>::Trie()
@@ -76,6 +62,23 @@ void Trie<T>::add(string _key, T _data)
 }
 
 template<typename T>
+T* Trie<T>::operator[] (string _key)
+{
+    if (_key.size()==0)
+        if (root->hasAData)
+            return &(root->data);
+        else
+            return nullptr;
+    
+    char start = _key[0];
+    if (!root->childs[start])
+        return nullptr;
+        
+    // recursive search for a value with the key
+    return root->childs[start]->find(_key.substr(1));
+}
+
+template<typename T>
 void Trie<T>::print()
 {
     if (root->hasAData)
@@ -85,10 +88,4 @@ void Trie<T>::print()
     for (int i = 0; i<256; i++)
         if (root->childs[i])
             root->childs[i]->print(string(1, (char)i));
-}
-
-template<typename T>
-void A<T>::print()
-{
-    cout<<5.2<<endl;
 }
