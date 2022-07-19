@@ -10,8 +10,8 @@ private:
     Vertex<T>* root;
 
 public:
-    Trie(){root = new Vertex<T>;}
-    ~Trie(){delete root;}
+    Trie();
+    ~Trie();
 
     // add a new value using a key
     void add(string _key, T _data);
