@@ -13,7 +13,7 @@ struct Vertex
     bool hasAData = false;
 
     // List of vertices coming from this vertex
-    Vertex<T>* childs[255];
+    Vertex<T>* childs[256];
 
     ~Vertex();
 };
