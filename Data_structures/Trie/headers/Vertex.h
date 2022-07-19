@@ -73,10 +73,14 @@ void Vertex<T>::print(string _key)
 template<typename T>
 T* Vertex<T>::find(string _key)
 {
+    // if the remained part of key is empty then we found the value
     if (_key.size()==0)
         return &data;
 
+    // recursive search starts with first char in the key
     char start = _key[0];
+
+    // if we do not have next subtree starting with the first char of the key then there is not out value
     if (!childs[start])
         return nullptr;
     return childs[start]->find(_key.substr(1));

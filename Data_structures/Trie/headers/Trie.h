@@ -66,11 +66,13 @@ T* Trie<T>::operator[] (string _key)
 {
     if (_key.size()==0)
         if (root->hasAData)
-            return &(root->data);
+            return &root->data;
         else
             return nullptr;
     
     char start = _key[0];
+
+    // if we do not have next subtree starting with the first char of the key then there is not out value
     if (!root->childs[start])
         return nullptr;
         
