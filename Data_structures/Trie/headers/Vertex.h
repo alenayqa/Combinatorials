@@ -19,7 +19,7 @@ struct Vertex
 
     void add(string _key, T _data);
 
-    T* find(string _key);
+    Vertex<T>* find(string _key);
 
     void print(string _key);
 
@@ -71,11 +71,11 @@ void Vertex<T>::print(string _key)
 }
 
 template<typename T>
-T* Vertex<T>::find(string _key)
+Vertex<T>* Vertex<T>::find(string _key)
 {
     // if the remained part of key is empty then we found the value
     if (_key.size()==0)
-        return &data;
+        return this;
 
     // recursive search starts with first char in the key
     char start = _key[0];

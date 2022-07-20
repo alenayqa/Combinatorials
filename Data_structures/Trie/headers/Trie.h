@@ -77,8 +77,25 @@ T* Trie<T>::operator[] (string _key)
         return nullptr;
         
     // recursive search for a value with the key
-    return root->childs[start]->find(_key.substr(1));
+    return &root->childs[start]->find(_key.substr(1))->data;
 }
+
+template<typename T>
+void Trie<T>::remove(string _key)
+{
+    if (_key.size()==0)
+        root->hasAData = false;
+
+    Vertex<T>* foundVertex;
+    char start = _key[0];
+
+    if (root->childs[start])
+        foundVertex = root->childs[start]->find(_key.substr(1));
+        
+    if (foundVertex)
+        foundVertex->hasAData = false;
+}
+
 
 template<typename T>
 void Trie<T>::print()
