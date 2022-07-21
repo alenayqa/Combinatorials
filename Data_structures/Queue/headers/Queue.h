@@ -46,7 +46,6 @@ Queue<T>::~Queue()
 template<typename T>
 bool Queue<T>::isEmpty()
 {
-    // if queue is empty then head and tail point to the same place
     return _size == 0;
 }
 
