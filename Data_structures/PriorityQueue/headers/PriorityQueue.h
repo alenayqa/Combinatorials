@@ -47,9 +47,9 @@ void PriorityQueue<T>::balance(int ind)
     // --- left(ind)
 
     int minInd = ind;
-    if (l < volume && arr[l]->priority < arr[minInd]->priority)
+    if (l < _size && arr[l]->priority < arr[minInd]->priority)
         minInd = l;
-    if (r < volume && arr[r]->priority < arr[minInd]->priority)
+    if (r < _size && arr[r]->priority < arr[minInd]->priority)
         minInd = r;
 
     // if tree isn't balanced then swap ind with minInd and balance child
