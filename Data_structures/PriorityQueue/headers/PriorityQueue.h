@@ -21,17 +21,44 @@ private:
     int left(int i) { return 2*i + 1;}
     int right(int i) { return 2*i + 2;}
 
+    void balance(int ind);
+
 public:
 
     PriorityQueue(int _volume);
     ~PriorityQueue();
 
     bool add(T _value, int _priority);
-    void remove_minimal();
+    void remove(T _value);
 
     T* get_minimal();
 
 };
+
+template <typename T>
+void PriorityQueue<T>::balance(int ind)
+{
+    int r = right(ind);
+    int l = left(ind);
+
+    // find minimal element in:
+    // --- ind
+    // --- right(ind)
+    // --- left(ind)
+
+    int minInd = ind;
+    if (l < volume && arr[l]->priority < arr[minInd]->priority)
+        minInd = l;
+    if (r < volume && arr[r]->priority < arr[minInd]->priority)
+        minInd = r;
+
+    // if tree isn't balanced then swap ind with minInd and balance childs
+    if (ind != minInd)
+    {
+        swap(ind, minInd);
+        balance(minInd);
+    } 
+}
 
 template <typename T>
 T* PriorityQueue<T>::get_minimal()
