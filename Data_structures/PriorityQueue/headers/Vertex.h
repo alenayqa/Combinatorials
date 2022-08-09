@@ -6,7 +6,7 @@ template <typename T>
 struct Vertex
 {
     T data;
-    int priority
+    int priority;
 
     Vertex(T _data, int _priority)
     {
