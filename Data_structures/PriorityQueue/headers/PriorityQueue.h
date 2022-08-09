@@ -28,17 +28,17 @@ public:
     PriorityQueue(int _volume=5);
     ~PriorityQueue();
 
-    bool add(T _value, int _priority);
-    void remove(T _value);
+    bool push(T _value, int _priority);
+    void pop();
 
-    T* get_minimal();
+    T* head();
 
     void print();
 
 };
 
 template <typename T>
-bool PriorityQueue<T>::add(T _value, int _priority)
+bool PriorityQueue<T>::push(T _value, int _priority)
 {
     if (_size >= volume)
         return false;
@@ -83,7 +83,7 @@ void PriorityQueue<T>::balance(int ind)
 }
 
 template <typename T>
-T* PriorityQueue<T>::get_minimal()
+T* PriorityQueue<T>::head()
 {
     if (arr[0])
         return &arr[0]->data;
