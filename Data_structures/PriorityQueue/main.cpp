@@ -13,6 +13,10 @@ int main()
     q.push(2,6);
     q.push(4,20);
     q.print();
-    cout<<*q.head()<<endl;
+    while (q.size()>0)
+    {
+        cout<<*q.pop()<<endl;
+    }
+    
 
 }

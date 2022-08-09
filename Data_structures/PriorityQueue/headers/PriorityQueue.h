@@ -29,13 +29,35 @@ public:
     ~PriorityQueue();
 
     bool push(T _value, int _priority);
-    void pop();
+    T* pop();
 
     T* head();
+
+    int size();
 
     void print();
 
 };
+
+template <typename T>
+T* PriorityQueue<T>::pop()
+{
+    if (_size == 0)
+        return nullptr;
+
+    T* ret = &arr[0]->data;
+
+    // replace the head with the last element
+    swap(0, _size - 1);
+
+    // remove the element
+    arr[_size - 1] = nullptr;
+
+    // balance the tree
+    balance(0);
+    _size--;
+    return ret;
+}
 
 template <typename T>
 bool PriorityQueue<T>::push(T _value, int _priority)
@@ -69,9 +91,9 @@ void PriorityQueue<T>::balance(int ind)
     // --- left(ind)
 
     int minInd = ind;
-    if (l < _size && arr[l]->priority < arr[minInd]->priority)
+    if (l < _size && arr[l] && arr[l]->priority < arr[minInd]->priority)
         minInd = l;
-    if (r < _size && arr[r]->priority < arr[minInd]->priority)
+    if (r < _size && arr[r] && arr[r]->priority < arr[minInd]->priority)
         minInd = r;
 
     // if tree isn't balanced then swap ind with minInd and balance child
@@ -87,7 +109,7 @@ T* PriorityQueue<T>::head()
 {
     if (arr[0])
         return &arr[0]->data;
-    else return nullptr;
+    return nullptr;
 }
 
 template <typename T>
@@ -119,5 +141,11 @@ void PriorityQueue<T>::print()
     for (int i = 0; i<_size; i++)
         cout<<arr[i]->data<<' ';
     cout<<endl;
+}
+
+template <typename T>
+int PriorityQueue<T>::size()
+{
+    return _size;
 }
 
