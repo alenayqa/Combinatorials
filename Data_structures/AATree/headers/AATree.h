@@ -6,5 +6,5 @@ using namespace std;
 class AATree
 {
 private:
-public;
+public:
 }
