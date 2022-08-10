@@ -12,6 +12,10 @@ int main()
     SegmentTree<int> t(a, n);
     cout<<t.sum(0,4)<<endl;
     cout<<t.sum(6,9)<<endl;
+    cout<<"UPDATE: 7->20\n";
+    t.update(6, 20);
+    cout<<t.sum(6,9)<<endl;
+
 
     
 

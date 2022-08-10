@@ -19,23 +19,42 @@ private:
     int right(int ind) {return 2 * ind + 1;}
 
     T recursive_sum(int ind, int l, int r, int part_l, int part_r);
+    void recursive_update(int ind, int l, int r, int pos, T value);
 
 public:
     SegmentTree(T* arr, int n);
     ~SegmentTree();
 
     T sum(int l, int r);
+    void update(int pos, T value);
 };
 
-// int sum (int v, int tl, int tr, int l, int r) {
-// 	if (l > r)
-// 		return 0;
-// 	if (l == tl && r == tr)
-// 		return t[v];
-// 	int tm = (tl + tr) / 2;
-// 	return sum (v*2, tl, tm, l, min(r,tm))
-// 		+ sum (v*2+1, tm+1, tr, max(l,tm+1), r);
-// }
+template <typename T>
+void SegmentTree<T>::recursive_update(int ind, int l, int r, int pos, T value)
+{
+    if (l==r)
+        tree[ind] = value;
+    else
+    {
+        // divide current segment into 2 parts
+        int middle = (l + r) / 2;
+        
+        // update left or right subtree
+        if (pos <= middle)
+            recursive_update(left(ind), l, middle, pos, value);
+        else
+            recursive_update(right(ind), middle + 1, r, pos, value);
+
+        // update current vertex after subtrees update
+        tree[ind] = tree[left(ind)] + tree[right(ind)];
+    }
+}
+
+template <typename T>
+void SegmentTree<T>::update(int pos, T value)
+{
+    recursive_update(1, 0, _size-1, pos, value);
+}
 
 template <typename T>
 T SegmentTree<T>::recursive_sum(int ind, int l, int r, int part_l, int part_r)
