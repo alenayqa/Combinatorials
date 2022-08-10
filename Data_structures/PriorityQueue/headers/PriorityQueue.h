@@ -21,7 +21,7 @@ private:
     int left(int i) { return 2*i + 1;}
     int right(int i) { return 2*i + 2;}
 
-    void balance(int ind);
+    void sort_tree(int ind);
 
 public:
 
@@ -53,8 +53,8 @@ T* PriorityQueue<T>::pop()
     // remove the element
     arr[_size - 1] = nullptr;
 
-    // balance the tree
-    balance(0);
+    // sort the tree
+    sort_tree(0);
     _size--;
     return ret;
 }
@@ -80,7 +80,7 @@ bool PriorityQueue<T>::push(T _value, int _priority)
 }
 
 template <typename T>
-void PriorityQueue<T>::balance(int ind)
+void PriorityQueue<T>::sort_tree(int ind)
 {
     int r = right(ind);
     int l = left(ind);
@@ -96,11 +96,11 @@ void PriorityQueue<T>::balance(int ind)
     if (r < _size && arr[r] && arr[r]->priority < arr[minInd]->priority)
         minInd = r;
 
-    // if tree isn't balanced then swap ind with minInd and balance child
+    // if tree isn't balanced then swap ind with minInd and sort child
     if (ind != minInd)
     {
         swap(ind, minInd);
-        balance(minInd);
+        sort_tree(minInd);
     } 
 }
 
