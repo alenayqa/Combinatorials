@@ -15,6 +15,7 @@ public:
     ~Vertex<T>();
 };
 
+template <typename T>
 Vertex<T>::Vertex(T _data, int _level, Vertex<T>* _l, Vertex<T>* _r)
 {
     l = _l;
@@ -23,6 +24,7 @@ Vertex<T>::Vertex(T _data, int _level, Vertex<T>* _l, Vertex<T>* _r)
     data = _data;
 }
 
+template <typename T>
 Vertex<T>::~Vertex()
 {
     delete l; delete r;

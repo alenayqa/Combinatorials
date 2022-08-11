@@ -7,4 +7,4 @@ class AATree
 {
 private:
 public:
-}
+};
