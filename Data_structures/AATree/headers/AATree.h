@@ -3,6 +3,7 @@
 
 using namespace std;
 
+template <typename K, typename D>
 class AATree
 {
 private:

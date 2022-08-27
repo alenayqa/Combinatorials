@@ -1,22 +1,23 @@
 #pragma once
 #include <iostream>
 
-template <typename T>
+template <typename K, typename D>
 class Vertex
 {
 public:
-    T data;
+    K key;
+    D data;
     int level;
 
-    Vertex<T>* l = nullptr;
-    Vertex<T>* r = nullptr;
+    Vertex<K, D>* l = nullptr;
+    Vertex<K, D>* r = nullptr;
 
-    Vertex<T>(T _data, int _level, Vertex<T>* _l, Vertex<T>* _r);
-    ~Vertex<T>();
+    Vertex<K, D>(K _key, D _data, int _level, Vertex<K, D>* _l, Vertex<K, D>* _r);
+    ~Vertex<K, D>();
 };
 
-template <typename T>
-Vertex<T>::Vertex(T _data, int _level, Vertex<T>* _l, Vertex<T>* _r)
+template <typename K, typename D>
+Vertex<K, D>::Vertex(K _key, D _data, int _level, Vertex<K, D>* _l = nullptr, Vertex<K, D>* _r = nullptr)
 {
     l = _l;
     r = _r;
@@ -24,8 +25,8 @@ Vertex<T>::Vertex(T _data, int _level, Vertex<T>* _l, Vertex<T>* _r)
     data = _data;
 }
 
-template <typename T>
-Vertex<T>::~Vertex()
+template <typename K, typename D>
+Vertex<K, D>::~Vertex()
 {
     delete l; delete r;
 }
