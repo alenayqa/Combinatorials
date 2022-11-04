@@ -1,19 +1,18 @@
 #pragma once
 #include <iostream>
 #include <algorithm>
+#include <memory>
 #include "Vertex.h"
 
 // https://dementiy.gitbooks.io/algo/content/heaps.html
-
-using namespace std;
 
 template<typename T>
 class PriorityQueue
 {
 private:
-    int volume;
-    int _size;
-    Vertex<T>** arr;
+    int m_volume;
+    int m_size;
+    std::unique_ptr<Vertex<T>[]> m_arr;
 
     void swap(int ind1, int ind2);
 
@@ -21,17 +20,16 @@ private:
     int left(int i) { return 2*i + 1;}
     int right(int i) { return 2*i + 2;}
 
-    void sort_tree(int ind);
+    void heapify_down(int ind);
+    void heapify_up(int ind);
 
 public:
 
-    PriorityQueue(int _volume=5);
-    ~PriorityQueue();
+    PriorityQueue(int volume=5);
 
-    bool push(T _value, int _priority);
-    T* pop();
-
-    T* head();
+    bool push(T value, int priority);
+    T pop();
+    T top();
 
     int size();
 
@@ -39,113 +37,137 @@ public:
 
 };
 
+/**
+ * Создает очередь с приоритетом
+ * @param volume зарезервированный объем очереди. НЕ является 
+ * максимальным объемом. При переполнении объем перевыделяется автоматически
+*/
 template <typename T>
-T* PriorityQueue<T>::pop()
+PriorityQueue<T>::PriorityQueue(int volume)
 {
-    if (_size == 0)
-        return nullptr;
+    m_volume = volume;
+    m_size = 0;
+    m_arr = std::make_unique<Vertex<T>[]>(volume);
+}
 
-    T* ret = &arr[0]->data;
+/**
+ * Получить элемент с минимальным приоритетом.
+ * Этот элемент удаляется из очереди
+*/
+template <typename T>
+T PriorityQueue<T>::pop()
+{
+    T ret = m_arr[0].data;
 
-    // replace the head with the last element
-    swap(0, _size - 1);
+    // Заменяем голову на самый правый элемент
+    swap(0, m_size - 1);
 
-    // remove the element
-    arr[_size - 1] = nullptr;
-
-    // sort the tree
-    sort_tree(0);
-    _size--;
+    // Балансируем дерево
+    heapify_down(0);
+    m_size--;
     return ret;
 }
 
+/**
+ * Получить элемент с минимальным приоритетом.
+ * Этот элемент не удаляется из очереди
+*/
 template <typename T>
-bool PriorityQueue<T>::push(T _value, int _priority)
+T PriorityQueue<T>::top()
 {
-    if (_size >= volume)
-        return false;
-    Vertex<T>* newVertex = new Vertex<T>(_value, _priority);
+    return m_arr[0].data;
+}
 
-    // find place where new element should be inserted to
-    int ind = _size;
-    arr[ind] = newVertex;
-
-    while (ind > 0 && arr[parent(ind)]->priority >= _priority)
+/**
+ * Добавляет число в очередь
+ * @param value добавляемое значение
+ * @param priority приоритет добавляемого значения
+*/
+template <typename T>
+bool PriorityQueue<T>::push(T value, int priority)
+{
+    // Если место закончилось, то перевыделяем память
+    if (m_size >= m_volume)
     {
-        swap(ind, parent(ind));
-        ind = parent(ind);
+        m_volume *= 2;
+
+        std::unique_ptr<Vertex<T>[]> tmp = std::make_unique<Vertex<T>[]>(m_volume);
+        for (int i = 0; i < m_size; i++)
+        {
+            tmp[i] = m_arr[i];
+        }
+        std::swap(tmp, m_arr);
     }
-    _size++;
+
+    // Дописываем в конец массива новое значение
+    m_arr[m_size] = Vertex<T>(value, priority);
+
+    // Балансируем дерево
+    heapify_up(m_size);
+    m_size++;
     return true;
 }
 
+/**
+ * Напечатать содержимое очереди
+*/
 template <typename T>
-void PriorityQueue<T>::sort_tree(int ind)
+void PriorityQueue<T>::print()
+{
+    for (int i = 0; i<m_size; i++)
+        std::cout<<m_arr[i].data<<' ';
+    std::cout<<std::endl;
+}
+
+/**
+ * Возвращает размер очереди
+*/
+template <typename T>
+int PriorityQueue<T>::size()
+{
+    return m_size;
+}
+
+template <typename T>
+void PriorityQueue<T>::heapify_up(int ind)
+{
+    while (ind > 0 && m_arr[parent(ind)].priority >= m_arr[ind].priority)
+    {
+        swap(ind, parent(ind));
+    }
+}
+
+template <typename T>
+void PriorityQueue<T>::heapify_down(int ind)
 {
     int r = right(ind);
     int l = left(ind);
 
-    // find minimal element in:
+    // Ищем минимальный элемент среди
     // --- ind
     // --- right(ind)
     // --- left(ind)
 
     int minInd = ind;
-    if (l < _size && arr[l] && arr[l]->priority < arr[minInd]->priority)
+    if (l < m_size && m_arr[l].priority < m_arr[minInd].priority)
         minInd = l;
-    if (r < _size && arr[r] && arr[r]->priority < arr[minInd]->priority)
+    if (r < m_size && m_arr[r].priority < m_arr[minInd].priority)
         minInd = r;
 
-    // if tree isn't balanced then swap ind with minInd and sort child
+    // Если дерево не сбалансировано, то меняем ind с minInd и продолжаем балансировку рекурсивно 
     if (ind != minInd)
     {
         swap(ind, minInd);
-        sort_tree(minInd);
+        heapify_down(minInd);
     } 
 }
 
 template <typename T>
-T* PriorityQueue<T>::head()
-{
-    if (arr[0])
-        return &arr[0]->data;
-    return nullptr;
-}
-
-template <typename T>
-PriorityQueue<T>::PriorityQueue(int _volume)
-{
-    volume = _volume;
-    _size = 0;
-    arr = new Vertex<T>*[_volume];
-}
-
-template <typename T>
-PriorityQueue<T>::~PriorityQueue()
-{
-    for (int i = 0; i<volume; i++)
-        delete arr[i];
-    delete[] arr;
-}
-template <typename T>
 void PriorityQueue<T>::swap(int ind1, int ind2)
 {
-    Vertex<T>* tmp = arr[ind1];
-    arr[ind1] = arr[ind2];
-    arr[ind2] = tmp;
+    Vertex<T> tmp = m_arr[ind1];
+    m_arr[ind1] = m_arr[ind2];
+    m_arr[ind2] = tmp;
 }
 
-template <typename T>
-void PriorityQueue<T>::print()
-{
-    for (int i = 0; i<_size; i++)
-        cout<<arr[i]->data<<' ';
-    cout<<endl;
-}
-
-template <typename T>
-int PriorityQueue<T>::size()
-{
-    return _size;
-}
 

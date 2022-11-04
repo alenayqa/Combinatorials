@@ -8,6 +8,7 @@ struct Vertex
     T data;
     int priority;
 
+    Vertex(){}
     Vertex(T _data, int _priority)
     {
         data = _data;

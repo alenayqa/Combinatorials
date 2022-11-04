@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-    PriorityQueue<int> q;
+    PriorityQueue<int> q(1);
     q.push(1,50);
     q.push(3,7);
     q.push(2,6);
@@ -15,7 +15,7 @@ int main()
     q.print();
     while (q.size()>0)
     {
-        cout<<*q.pop()<<endl;
+        cout<<q.pop()<<endl;
     }
     
 
