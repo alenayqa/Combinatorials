@@ -1,0 +1,3 @@
+IO:
+  # Путь до файла с частотами символов
+  freq-path: /home/sad/Desktop/Предметы/КА/Combinatorials/Archiver/freq.txt
