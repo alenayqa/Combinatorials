@@ -4,19 +4,58 @@
 
 using namespace std;
 
+#define PRINT_Q "1"
+#define ADD_Q "2"
+#define TOP_Q "3"
+#define POP_Q "4"
+
+void add_element(PriorityQueue<int>& q)
+{
+    int value, priority;
+    std::cout<<"Добавить число: ";
+    std::cin>>value;
+    std::cout<<"Приоритет числа: ";
+    std::cin>>priority;
+    q.push(value, priority);
+}
+
 
 int main()
 {
     PriorityQueue<int> q(1);
-    q.push(1,50);
-    q.push(3,7);
-    q.push(2,6);
-    q.push(4,20);
-    q.print();
-    while (q.size()>0)
-    {
-        cout<<q.pop()<<endl;
-    }
-    
 
+    while (true)
+    {
+        std::cout<<"\nДействие\n";
+        std::cout<<"1 - напечатать очередь\n";
+        std::cout<<"2 - добавить элемент\n";
+        std::cout<<"3 - посмотреть элемент с минимальным приоритетом\n";
+        std::cout<<"4 - удалить верхний элемент с минимальным приоритетом\n";
+        std::cout<<"Другое - выйти\n";
+
+        std::string action;
+        std::cin>>action;
+
+        if (action == PRINT_Q)
+        {
+            q.print();
+        }
+        else if (action == ADD_Q)
+        {
+            add_element(q);
+        }
+        else if (action == TOP_Q)
+        {
+            std::cout<<"Минимальный приоритет у числа: " <<q.top()<<std::endl;
+        }
+        else if (action == POP_Q)
+        {
+            std::cout<<"Удален элемент: "<<q.pop()<<std::endl;
+        }
+        else
+        {
+            break;
+        }
+
+    }
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <memory>
+#include <stdexcept>
 #include "Vertex.h"
 
 // https://dementiy.gitbooks.io/algo/content/heaps.html
@@ -27,7 +28,7 @@ public:
 
     PriorityQueue(int volume=5);
 
-    bool push(T value, int priority);
+    void push(T value, int priority);
     T pop();
     T top();
 
@@ -57,14 +58,18 @@ PriorityQueue<T>::PriorityQueue(int volume)
 template <typename T>
 T PriorityQueue<T>::pop()
 {
+    if (m_size==0)
+    {
+        throw std::out_of_range("EMPTY QUEUE");
+    }
     T ret = m_arr[0].data;
 
     // Заменяем голову на самый правый элемент
     swap(0, m_size - 1);
+    m_size--;
 
     // Балансируем дерево
     heapify_down(0);
-    m_size--;
     return ret;
 }
 
@@ -84,7 +89,7 @@ T PriorityQueue<T>::top()
  * @param priority приоритет добавляемого значения
 */
 template <typename T>
-bool PriorityQueue<T>::push(T value, int priority)
+void PriorityQueue<T>::push(T value, int priority)
 {
     // Если место закончилось, то перевыделяем память
     if (m_size >= m_volume)
@@ -105,7 +110,6 @@ bool PriorityQueue<T>::push(T value, int priority)
     // Балансируем дерево
     heapify_up(m_size);
     m_size++;
-    return true;
 }
 
 /**
@@ -114,9 +118,15 @@ bool PriorityQueue<T>::push(T value, int priority)
 template <typename T>
 void PriorityQueue<T>::print()
 {
-    for (int i = 0; i<m_size; i++)
-        std::cout<<m_arr[i].data<<' ';
-    std::cout<<std::endl;
+    if (m_size > 0)
+    {
+        for (int i = 0; i<m_size; i++)
+            std::cout<<m_arr[i].data <<" : "<<m_arr[i].priority<<std::endl;
+    }
+    else
+    {
+        std::cout<<"Очередь пуста\n";
+    }
 }
 
 /**
@@ -134,6 +144,7 @@ void PriorityQueue<T>::heapify_up(int ind)
     while (ind > 0 && m_arr[parent(ind)].priority >= m_arr[ind].priority)
     {
         swap(ind, parent(ind));
+        ind = parent(ind);
     }
 }
 
