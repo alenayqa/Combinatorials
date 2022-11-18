@@ -22,7 +22,9 @@ void dfs(int len, int vertex)
 
     for (int i = 0; i < n; i++)
     {
+        // Идем только по верхней части матрицы
         if (i <= vertex) continue;
+        // Проверяем, что новая вершина дружит со всеми предыдущими
         bool correct = true;
         for (int j = 0; j < len; j++)
         {
@@ -34,6 +36,7 @@ void dfs(int len, int vertex)
         }
     }
 
+    // Если группа становится наибольшей
     if (len > maxlen)
     {
         maxlen = len;
