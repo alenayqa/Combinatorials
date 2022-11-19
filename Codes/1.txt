@@ -1,0 +1,168 @@
+// By Mohit Gupta
+#include <bits/stdc++.h>
+using namespace std;
+#define printint(v) copy(begin(v), end(v), ostream_iterator<int>(cout," "))
+#define printintv(s,e) copy(s,e, ostream_iterator<int>(cout," "))
+#define forstl(i,v) for(auto &i: v)
+#define forn(i,e) for(int i = 0; i < e; i++)
+#define forsn(i,s,e) for(int i = s; i < e; i++)
+#define rforn(i,s) for(int i = s; i >= 0; i--)
+#define rforsn(i,s,e) for(int i = s; i >= e; i--)
+#define clz(a) __builtin_clz(a) // count leading zeroes
+#define ctz(a) __builtin_ctz(a) // count trailing zeroes
+#define popc(a) __builtin_popcount(a) // count set bits (for ints only diff for ll)
+//https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html for other in built
+#define ln "\n"
+#define dbg(x) cout<<#x<<" = "<<x<<ln
+#define mp make_pair
+#define pb push_back
+#define fi first
+#define se second
+#define IOS ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+typedef long long ll;
+typedef pair<int,int> p32; 
+typedef pair<ll,ll> p64;
+typedef pair<double,double> pdd;
+typedef vector<ll> v64;
+typedef vector<int> v32;
+typedef vector<vector<int> > vv32;
+typedef vector<p64> vp64;
+typedef vector<p32> vp32;
+typedef map<int,int> m32;
+#pragma GCC optimize ("-O2")
+const int LIM = 1e5+5, MOD = 1e9+7;
+int n,m,k,x,y;
+vector<vector<int> > ans;
+int visited[LIM];
+vector<int> par1(LIM,1e9);
+vector<int> par2(LIM,1e9);
+
+//map<int,int> getind;
+int arr[LIM];
+
+bool check(){
+	forsn(i,1,n+1){
+		if(!visited[arr[i]])
+			return false;
+	}
+	return true;
+}
+
+void solve(int t){
+	if(t==0)
+		return;
+	forsn(i,1,n+1){
+		par1[i]=par2[i]=1e9;
+	}
+	if(check()){
+		return;
+	}
+/////////////////////////////////////////////////////
+	// longest increasing sequence
+/////////////////////////////////////////////////////	
+	vector<int> lis;
+	forsn(i,1,n+1){
+		if(!visited[arr[i]]){
+			int index =  upper_bound(lis.begin(),lis.end(),arr[i])-lis.begin();
+			if(index == lis.size()){
+				lis.pb(arr[i]);
+			}
+			else{
+				par1[arr[i]]=lis[index];
+				lis[index]=arr[i];
+			}
+		}
+	}
+/////////////////////////////////////////////////////////
+// 		longest decreasing sequence	
+/////////////////////////////////////////////////////////
+	vector<int> lisd;
+	forsn(i,1,n+1){
+		if(!visited[arr[i]]){
+			int index = upper_bound(lisd.begin(),lisd.end(),-1*arr[i])-lisd.begin();
+			if(index == lisd.size()){
+				lisd.pb(-1*arr[i]);
+			}
+			else{
+				par2[-1*arr[i]]=lisd[index];
+				lisd[index]=-1*arr[i];
+			}
+		}
+	}	
+
+///////////////////////////////////////////////////////////	
+
+//  Assignment on the basis of which is longest	
+	if(lis.size() >= lisd.size()){
+		for(int i=lis.size()-2;i>=0;i--){
+			int curr=lis[i];
+			int prev=lis[i+1];
+			while(par1[curr]<prev){
+				curr=par1[curr];
+			}
+			lis[i]=curr;
+		}
+		//ans.pb(lis);
+		ans.pb(vector<int>());
+		for(int x : lis){
+			ans.back().pb(x);
+		}
+		for(int x : lis){
+			visited[x]=1;
+		}
+	}
+	else{
+		for(int i=lisd.size()-2;i>=0;i--){
+			int curr=lisd[i];
+			int prev=lisd[i+1];
+			while(par2[curr]<prev){
+				curr=par2[curr];
+			}
+			lisd[i]=curr;
+		}
+		forn(i,lisd.size()){
+			lisd[i]*=-1;
+		}
+		//ans.pb(lisd);
+		ans.pb(vector<int>());
+		for(int x : lisd){
+			ans.back().pb(x);
+		}
+		for(int x : lisd){
+			visited[x]=1;
+		}
+	}
+	solve(t-1);
+	return;
+}
+
+int main()
+{
+	IOS;
+	int T;
+	cin>>T;
+	while(T--){
+		ans.clear();
+		cin>>n;
+		forsn(i,1,n+1){
+			cin>>arr[i];
+			//getind[arr[i]]=i;
+			visited[arr[i]]=0;
+		}
+		int t=1;
+		for(;t <= 2*sqrt(n); t++){
+			if((t*(t+1))/2 > n)
+				break;
+		}
+		t--;
+		//dbg(t);
+		solve(t);
+		for(auto s : ans){
+			cout<<s.size()<<" ";
+			for(int x : s){
+				cout<<x<<" ";
+			}
+			cout<<ln;
+		}
+	}
+}
