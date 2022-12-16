@@ -80,15 +80,22 @@ int main()
 
     int level = 0;
     Node n;
+    Node new_node;
     while (true)
     {
-        n = pq.top();
+        new_node = pq.top();
         pq.pop();
-        if (n.level == N + 1)
+        if (new_node.level == N + 1)
         {
-            break;
+            if (new_node.estimation != -1)
+                break;
+            continue;
         }
-        Node l, r;
+        // l - "условно" левое поддерево - очередной предмет берется
+        Node l;
+        // r - "условно" правое поддерево - очередной предмет не берется
+        Node r;
+        n = new_node;
         int k = n.level;
 
         l.m = n.m + items[k].m;
@@ -124,7 +131,11 @@ int main()
 
     auto res = n.taken_items;
     sort(res.begin(), res.end(), [](Item a, Item b){ return a.index < b.index; });
-    for (const auto& x : res)
+    if (res.size() == 0)
+    {
+        cout<<"Ничего не влезло"<<endl;
+    }
+    else for (const auto& x : res)
     {
         cout<<x.index + 1<<' ';
     }
